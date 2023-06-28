@@ -84,3 +84,16 @@ TelephoneRepository
 - listar todos os telefones
 - telefone que começa por
 
+SQL:
+CLIENT
+insert into client(id,name,cpf,password) values (3,'Danielle','876.543.210-01','123');
+insert into client(id,name,cpf,password) values (4,'Clavison','259.683.417-93','123');
+insert into client(id,name,cpf,password) values (5, 'Cauã', '749.105.623-80','123');
+insert into client(id,name,cpf,password) values (6, 'Tais', '384.916.752-26','123');
+insert into client(id,name,cpf,password) values (7, 'Gabrielly', '610.497.835-44','123');
+insert into client(id,name,cpf,password) values (8, 'Bianca', '978.305.426-68','123');
+insert into client(id,name,cpf,password) values (9, 'Alexandre', '163.874.592-10','123');
+insert into client(id,name,cpf,password) values (10,'Lucas', '532.796.841-53','123');
+insert into client(id,name,cpf,password) values (11, 'Max','712.439.058-30','123');
+insert into client(id,name,cpf,password) values (12, 'Gabriela','857.219.603-29','123');
+

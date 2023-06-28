@@ -9,7 +9,7 @@ import br.com.trier.projpessoal.surveillance.domain.Camera;
 
 public interface CameraRepository extends JpaRepository<Camera, Integer> {
 
-	Camera findByValue(Double value);
+	Camera findByPrice(Double value);
 
 	Optional<Camera> findById(Integer id);
 

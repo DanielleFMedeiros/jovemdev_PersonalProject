@@ -9,11 +9,9 @@ import br.com.trier.projpessoal.surveillance.domain.Client;
 
 public interface ClientRepository extends JpaRepository<Client, Integer> {
 
-	Client findByCpf(String cpf);
+	Optional<Client> findByCpf(String cpf);
 
-	Optional<Client> findByEmail(String email);
-
-	List<Client> findByNameStartingWithIgnoreCase(String name);
+	List<Client> findByNameContainsIgnoreCase(String name);
 	
 	Optional<Client> findById(Integer id);
 

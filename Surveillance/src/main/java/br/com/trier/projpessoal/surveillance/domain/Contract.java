@@ -18,26 +18,25 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Entity(name = "email")
+@Entity(name = "contract")
 public class Contract {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Setter
-	
+
 	@Column
 	private Integer id;
-	
+
 	@ManyToOne
 	private Client client;
-	
+
 	@Column
 	private ZonedDateTime dateInitial;
-	
+
 	@Column
 	private ZonedDateTime dateFinal;
-	
+
 	@Column
-	private double value;
-	
-	
+	private Double price;
+
 }

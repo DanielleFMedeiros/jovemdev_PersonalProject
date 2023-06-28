@@ -1,5 +1,6 @@
 package br.com.trier.projpessoal.surveillance.domain;
 
+import br.com.trier.projpessoal.surveillance.domain.dto.ClientDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,5 +30,15 @@ public class Client {
 	private String name;
 	@Column
 	private String cpf;
+	@Column
+	private String password;
+	
+	public Client(ClientDTO dto) {
+		this(dto.getId(), dto.getName(),dto.getCpf(), dto.getPassword());
+	}
+
+	public ClientDTO toDto() {
+		return new ClientDTO(this.id, this.name, this.cpf, this.password);
+	}
 
 }

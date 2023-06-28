@@ -9,7 +9,7 @@ import br.com.trier.projpessoal.surveillance.domain.Alarm;
 
 public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
 
-	Alarm findByValue(Double value);
+	Alarm findByPrice(Double value);
 
 	Optional<Alarm> findById(Integer id);
 

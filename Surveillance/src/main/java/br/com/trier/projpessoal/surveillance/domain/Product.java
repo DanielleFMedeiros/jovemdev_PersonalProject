@@ -27,5 +27,5 @@ public class Product {
 	private String name;
 
 	@Column
-	private double value;
+	private Double price;
 }
