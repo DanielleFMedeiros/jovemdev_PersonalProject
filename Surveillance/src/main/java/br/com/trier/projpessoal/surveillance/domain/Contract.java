@@ -1,4 +1,6 @@
-package br.com.trier.projpessoal.vigilancia.domain;
+package br.com.trier.projpessoal.surveillance.domain;
+
+import java.time.ZonedDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,18 +18,26 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Entity(name = "telephone")
-
-public class Telephone {
+@Entity(name = "email")
+public class Contract {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Setter
 	
 	@Column
 	private Integer id;
-	@Column
-	private Character phonenumber;
-
+	
 	@ManyToOne
 	private Client client;
+	
+	@Column
+	private ZonedDateTime dateInitial;
+	
+	@Column
+	private ZonedDateTime dateFinal;
+	
+	@Column
+	private double value;
+	
+	
 }

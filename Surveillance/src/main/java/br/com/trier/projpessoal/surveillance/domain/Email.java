@@ -1,5 +1,4 @@
-package br.com.trier.projpessoal.vigilancia.domain;
-
+package br.com.trier.projpessoal.surveillance.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,8 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Entity(name = "stock")
-public class Stock {
+@Entity(name = "email")
+public class Email {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Setter
@@ -25,8 +24,8 @@ public class Stock {
 	@Column
 	private Integer id;
 	@Column
-	private Integer qteProduct;
+	private String email;
 	
 	@ManyToOne
-	private Product product;
+	private Client client;
 }

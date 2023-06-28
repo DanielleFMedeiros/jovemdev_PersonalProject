@@ -1,4 +1,4 @@
-package br.com.trier.projpessoal.vigilancia.domain;
+package br.com.trier.projpessoal.surveillance.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,18 +15,19 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Entity(name = "product")
-public class Product {
+@Entity(name = "client")
+
+public class Client {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Setter
-	
+
 	@Column
 	private Integer id;
 	@Column
 	private String name;
 	@Column
-	private String type;
-	@Column
-	private double value;
+	private String cpf;
+
 }

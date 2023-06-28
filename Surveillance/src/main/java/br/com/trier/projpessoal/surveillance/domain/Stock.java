@@ -1,4 +1,4 @@
-package br.com.trier.projpessoal.vigilancia.domain;
+package br.com.trier.projpessoal.surveillance.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,9 +16,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Entity(name = "adress")
-
-public class Address {
+@Entity(name = "stock")
+public class Stock {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Setter
@@ -26,18 +25,8 @@ public class Address {
 	@Column
 	private Integer id;
 	@Column
-	private String street;
-	@Column
-	private String neighborhood;
-	@Column
-	private Integer number;
-	@Column
-	private String city;
-	@Column
-	private String state;
-	@Column
-	private String zipCode;
+	private Integer qteProduct;
 	
 	@ManyToOne
-	private Client client;
+	private Product product;
 }

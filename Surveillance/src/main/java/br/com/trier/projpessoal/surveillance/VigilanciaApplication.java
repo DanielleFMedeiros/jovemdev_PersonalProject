@@ -1,4 +1,4 @@
-package br.com.trier.projpessoal.vigilancia;
+package br.com.trier.projpessoal.surveillance;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
