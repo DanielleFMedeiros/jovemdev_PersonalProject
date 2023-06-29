@@ -25,7 +25,7 @@ public class Client {
 	@Setter
 
 	@Column
-	private Integer id;
+	private Integer id_client;
 	@Column
 	private String name;
 	@Column
@@ -34,11 +34,11 @@ public class Client {
 	private String password;
 	
 	public Client(ClientDTO dto) {
-		this(dto.getId(), dto.getName(),dto.getCpf(), dto.getPassword());
+		this(dto.getId_client(), dto.getName(),dto.getCpf(), dto.getPassword());
 	}
 
 	public ClientDTO toDto() {
-		return new ClientDTO(this.id, this.name, this.cpf, this.password);
+		return new ClientDTO(this.id_client, this.name, this.cpf, this.password);
 	}
 
 }

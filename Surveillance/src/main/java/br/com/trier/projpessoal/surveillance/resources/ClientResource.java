@@ -48,7 +48,7 @@ public class ClientResource {
 	public ResponseEntity<Client> updateClient(@PathVariable Integer id, @RequestBody Client client) {
 		Client existingClient = clientService.findById(id);
 
-		client.setId(id);
+		client.setId_client(id);
 		Client updatedClient = clientService.update(client);
 		return ResponseEntity.ok(updatedClient);
 	}

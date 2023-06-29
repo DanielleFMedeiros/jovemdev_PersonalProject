@@ -41,10 +41,15 @@ Encontrar endereço por:
 - Endereços de clientes que começam com a rua tal começando por com ignorecase,
 - Clientes que possuem Endereços localizados no bairro tal,
 - Clientes que possuem numero da casa tal,
-- Clientes da cidade tal, 
-- Clientes do estado tal,
+
 
 ContractRepository
+Encontrar contrato por:
+- Data inicial
+- Data final,
+- Data entre
+- preço
+
 EmailRepository
 ProductRepository
 TelephoneRepository

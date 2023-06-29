@@ -9,7 +9,7 @@ import br.com.trier.projpessoal.surveillance.domain.Address;
 
 @Service
 public interface AddressService {
-	Address insert(Address adress);
+	Address insert(Address address);
 
 	List<Address> listAll();
 
@@ -20,9 +20,8 @@ public interface AddressService {
 	void delete(Integer id);
 
 	List<Address> findByNeighborhood(String neighborhood);
-	
+
 	Optional<Address> findByNumber(Integer number);
 
 	List<Address> findByStreetContainsIgnoreCase(String street);
-
 }

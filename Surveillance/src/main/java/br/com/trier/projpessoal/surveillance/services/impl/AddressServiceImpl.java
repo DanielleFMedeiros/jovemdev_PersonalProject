@@ -4,34 +4,37 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import br.com.trier.projpessoal.surveillance.domain.Address;
-import br.com.trier.projpessoal.surveillance.domain.Client;
 import br.com.trier.projpessoal.surveillance.repositories.AddressRepository;
 import br.com.trier.projpessoal.surveillance.services.AddressService;
+import br.com.trier.projpessoal.surveillance.services.exceptions.BreachOfIntegrity;
 import br.com.trier.projpessoal.surveillance.services.exceptions.ObjectNotFound;
 
 @Service
 public class AddressServiceImpl implements AddressService {
 	@Autowired
 	private AddressRepository repository;
-
-	@Configuration
-	public class AppConfig {
-		@Bean
-		public RestTemplate restTemplate() {
-			return new RestTemplate();
-		}
-	}
-
+	
 	@Override
 	public Address insert(Address address) {
-		return repository.save(address);
+	    if (address.getStreet() == null || address.getStreet().isEmpty()) {
+	        throw new BreachOfIntegrity("A rua é obrigatória");
+	    }
+	    if (address.getNeighborhood() == null || address.getNeighborhood().isEmpty()) {
+	        throw new BreachOfIntegrity("O bairro é obrigatório");
+	    }
+	    if (address.getNumber() <= 0) {
+	        throw new BreachOfIntegrity("O número deve ser maior que zero");
+	    }
+	    if (address.getClient() == null) {
+	        throw new BreachOfIntegrity("O cliente é obrigatório");
+	    }
+
+	    return repository.save(address);
 	}
+
 
 	@Override
 	public List<Address> listAll() {

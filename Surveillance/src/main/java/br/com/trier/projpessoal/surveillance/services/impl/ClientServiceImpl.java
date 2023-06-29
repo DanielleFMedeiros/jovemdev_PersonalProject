@@ -24,7 +24,7 @@ public class ClientServiceImpl implements ClientService {
 	@Configuration
 	public class AppConfig {
 		@Bean
-		public RestTemplate restTemplate() {
+		public RestTemplate resttTemplate() {
 			return new RestTemplate();
 		}
 	}
@@ -33,7 +33,7 @@ public class ClientServiceImpl implements ClientService {
 		Optional<Client> clientRequired = repository.findByCpf(obj.getCpf());
 		if (clientRequired.isPresent()) {
 			Client client = clientRequired.get();
-			if (client.getId() != obj.getId()) {
+			if (client.getId_client() != obj.getId_client()) {
 				throw new BreachOfIntegrity("CPF já foi registrado: %s".formatted(obj.getCpf()));
 			}
 		}
@@ -62,9 +62,9 @@ public class ClientServiceImpl implements ClientService {
 
 	@Override
 	public Client update(Client client) {
-		Optional<Client> existingClient = repository.findById(client.getId());
+		Optional<Client> existingClient = repository.findById(client.getId_client());
 		if (existingClient.isEmpty()) {
-			throw new ObjectNotFound("Cliente com ID %s não encontrado".formatted(client.getId()));
+			throw new ObjectNotFound("Cliente com ID %s não encontrado".formatted(client.getId_client()));
 		}
 
 		Client foundClient = existingClient.get();

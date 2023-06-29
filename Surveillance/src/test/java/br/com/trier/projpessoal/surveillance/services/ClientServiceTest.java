@@ -16,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 
 import br.com.trier.projpessoal.surveillance.BaseTests;
 import br.com.trier.projpessoal.surveillance.domain.Client;
-import br.com.trier.projpessoal.surveillance.services.exceptions.BreachOfIntegrity;
 import br.com.trier.projpessoal.surveillance.services.exceptions.ObjectNotFound;
 import jakarta.transaction.Transactional;
 
@@ -30,12 +29,12 @@ public class ClientServiceTest extends BaseTests {
     private RestTemplate rest;
 
     @Test
-    @DisplayName("Test fetch user by ID")
+    @DisplayName("Test fetch client by ID")
     @Sql({ "classpath:/resources/sqls/client.sql" })
     void findByIdTest() {
         var client = clientService.findById(3);
         assertThat(client).isNotNull();
-        assertEquals(3, client.getId());
+        assertEquals(3, client.getId_client());
         assertEquals("Danielle", client.getName());
         assertEquals("876.543.210-01", client.getCpf());
         assertEquals("123", client.getPassword());
@@ -50,7 +49,7 @@ public class ClientServiceTest extends BaseTests {
     }
 
     @Test
-    @DisplayName("Test fetch user by Cpf")
+    @DisplayName("Test fetch client by Cpf")
     @Sql({ "classpath:/resources/sqls/client.sql" })
     void findByCpfTest() {
         String cpf = "876.543.210-01";
@@ -65,7 +64,7 @@ public class ClientServiceTest extends BaseTests {
     }
 
     @Test
-    @DisplayName("Test fetch user by non-existing Cpf")
+    @DisplayName("Test fetch client by non-existing Cpf")
     @Sql({ "classpath:/resources/sqls/client.sql" })
     void findByNonExistingCpfTest() {
         String cpf = "111.222.333-44";
@@ -98,7 +97,7 @@ public class ClientServiceTest extends BaseTests {
     void listAllTest() {
         List<Client> list = clientService.listAll();
         assertEquals(10, list.size());
-        assertEquals(3, list.get(0).getId());
+        assertEquals(3, list.get(0).getId_client());
     }
 
     @Test
@@ -118,31 +117,31 @@ public class ClientServiceTest extends BaseTests {
     }
 
     @Test
-    @DisplayName("Test change user")
+    @DisplayName("Test change client")
     @Sql({ "classpath:/resources/sqls/client.sql" })
     void UpdateClientTest() {
         var client = new Client(11, "Gabriella", "621.035.897-84", "password");
         clientService.update(client);
         client = clientService.findById(11);
         assertThat(client).isNotNull();
-        assertEquals(11, client.getId());
+        assertEquals(11, client.getId_client());
         assertEquals("Gabriella", client.getName());
         assertEquals("621.035.897-84", client.getCpf());
         assertEquals("password", client.getPassword());
     }
 
     @Test
-    @DisplayName("Test delete user")
+    @DisplayName("Test delete client")
     @Sql({ "classpath:/resources/sqls/client.sql" })
     void DeleteClientTest() {
         clientService.delete(3);
         List<Client> list = clientService.listAll();
         assertEquals(9, list.size());
-        assertEquals(4, list.get(0).getId());
+        assertEquals(4, list.get(0).getId_client());
     }
 
     @Test
-    @DisplayName("Test delete non-existent user")
+    @DisplayName("Test delete non-existent client")
     @Sql({ "classpath:/resources/sqls/client.sql" })
     void deleteNonExistentTest() {
         var exception = assertThrows(ObjectNotFound.class, () -> clientService.findById(20));
@@ -150,19 +149,19 @@ public class ClientServiceTest extends BaseTests {
     }
 
     @Test
-    @DisplayName("Test add user")
+    @DisplayName("Test add client")
     @Sql({ "classpath:/resources/sqls/client.sql" })
     void insertClientTest() {
         var client = new Client(null, "Fernanda", "621.035.897-84", "123");
         clientService.insert(client);
-        assertEquals(1, client.getId());
+        assertEquals(1, client.getId_client());
         assertEquals("Fernanda", client.getName());
         assertEquals("621.035.897-84", client.getCpf());
         assertEquals("123", client.getPassword());
     }
 
     @Test
-    @DisplayName("Test change non-existent user")
+    @DisplayName("Test change non-existent client")
     @Sql({ "classpath:/resources/sqls/client.sql" })
     void updateClientNonExistentTest() {
         var client = new Client(20, "Fernando", "165.746.831-11", "123");
