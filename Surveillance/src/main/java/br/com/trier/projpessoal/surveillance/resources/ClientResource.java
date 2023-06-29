@@ -3,7 +3,6 @@ package br.com.trier.projpessoal.surveillance.resources;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,20 +14,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.trier.projpessoal.surveillance.domain.Client;
+import br.com.trier.projpessoal.surveillance.domain.dto.ClientDTO;
 import br.com.trier.projpessoal.surveillance.services.ClientService;
 
 @RestController
-@RequestMapping("/clients")
+@RequestMapping(value = "/clients")
 public class ClientResource {
 
 	@Autowired
 	private ClientService clientService;
 
 	@PostMapping
-	public ResponseEntity<Client> createClient(@RequestBody Client client) {
-		Client createdClient = clientService.insert(client);
-		return ResponseEntity.status(HttpStatus.CREATED).body(createdClient);
+	public ResponseEntity<ClientDTO> insertClient(@RequestBody ClientDTO clientDTO) {
+		Client createdClient = clientService.insert(new Client(clientDTO));
+		return  ResponseEntity.ok(createdClient.toDto());
 	}
+	
 
 	@GetMapping
 	public ResponseEntity<List<Client>> getAllClients() {
@@ -37,10 +38,9 @@ public class ClientResource {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Client> getClientById(@PathVariable Integer id) {
+	public ResponseEntity<ClientDTO> getClientById(@PathVariable Integer id) {
 		Client client = clientService.findById(id);
-
-		return ResponseEntity.ok(client);
+		return ResponseEntity.ok(client.toDto());
 
 	}
 

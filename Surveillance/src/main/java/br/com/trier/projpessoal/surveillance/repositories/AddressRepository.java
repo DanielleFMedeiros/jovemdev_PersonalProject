@@ -11,10 +11,11 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
 
 	Optional<Address> findByNumber(Integer number);
 
-	List<Address> findByStreetStartingWithIgnoreCase(String street);
-
 	List<Address> findByNeighborhood(String neighborhood);
 
 	Optional<Address> findById(Integer id);
+
+	List<Address> findByStreetContainsIgnoreCase(String street);
+
 
 }

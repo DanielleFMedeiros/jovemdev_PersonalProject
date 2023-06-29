@@ -23,14 +23,14 @@ public class ClientServiceImpl implements ClientService {
 
 	@Configuration
 	public class AppConfig {
-	    @Bean
-	    public RestTemplate restTemplate() {
-	        return new RestTemplate();
-	    }
+		@Bean
+		public RestTemplate restTemplate() {
+			return new RestTemplate();
+		}
 	}
-	
-	private void findByCpf(Client obj) {
-		Optional<Client> clientRequired= repository.findByCpf(obj.getCpf());
+
+	private void validateByCpf(Client obj) {
+		Optional<Client> clientRequired = repository.findByCpf(obj.getCpf());
 		if (clientRequired.isPresent()) {
 			Client client = clientRequired.get();
 			if (client.getId() != obj.getId()) {
@@ -38,9 +38,10 @@ public class ClientServiceImpl implements ClientService {
 			}
 		}
 	}
-	
+
 	@Override
 	public Client insert(Client client) {
+		validateByCpf(client);
 		return repository.save(client);
 	}
 
@@ -56,16 +57,22 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public Client findById(Integer id) {
 		Optional<Client> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ObjectNotFound("Cliente com ID %d não encontrado".formatted(id)));
+		return obj.orElseThrow(() -> new ObjectNotFound("Cliente com ID %s não encontrado".formatted(id)));
 	}
 
 	@Override
 	public Client update(Client client) {
 		Optional<Client> existingClient = repository.findById(client.getId());
 		if (existingClient.isEmpty()) {
-			throw new ObjectNotFound("Cliente com ID %d não encontrado".formatted(client.getId()));
+			throw new ObjectNotFound("Cliente com ID %s não encontrado".formatted(client.getId()));
 		}
-		return insert(client);
+
+		Client foundClient = existingClient.get();
+		if (!foundClient.getCpf().equals(client.getCpf())) {
+			validateByCpf(client);
+		}
+
+		return repository.save(client);
 	}
 
 	@Override
@@ -88,9 +95,10 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public Optional<Client> findByCpf(String cpf) {
 		Optional<Client> client = repository.findByCpf(cpf);
-		if (client == null) {
+		if (client.isEmpty()) {
 			throw new ObjectNotFound("Cliente com CPF %s não encontrado".formatted(cpf));
 		}
 		return client;
 	}
+
 }
