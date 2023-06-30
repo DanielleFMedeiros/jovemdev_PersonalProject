@@ -1,29 +1,20 @@
 package br.com.trier.projpessoal.surveillance.utils;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class DateUtils {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public static ZonedDateTime strToZonedDateTime(String dateInitial) {
-        LocalDateTime localDateTime = LocalDateTime.parse(dateInitial, formatter);
-        return ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
+    public static LocalDate strToLocalDate(String dateInicial) {
+        return LocalDate.parse(dateInicial, formatter);
+    }
+    
+    public static LocalDate strToLocalDateFinal(String dateFinal) {
+        return LocalDate.parse(dateFinal, formatter);
     }
 
-    public static String zonedDateTimeToStr(ZonedDateTime dateTime) {
-        return formatter.format(dateTime);
-    }
-
-    public static ZonedDateTime[] strToZonedDateTime(String dateInitial, String dateFinal) {
-        LocalDateTime localDateTimeInitial = LocalDateTime.parse(dateInitial, formatter);
-        LocalDateTime localDateTimeFinal = LocalDateTime.parse(dateFinal, formatter);
-
-        ZonedDateTime zonedDateTimeInitial = ZonedDateTime.of(localDateTimeInitial, ZoneId.systemDefault());
-        ZonedDateTime zonedDateTimeFinal = ZonedDateTime.of(localDateTimeFinal, ZoneId.systemDefault());
-
-        return new ZonedDateTime[]{zonedDateTimeInitial, zonedDateTimeFinal};
+    public static String localDateToStr(LocalDate date) {
+        return date.format(formatter);
     }
 }

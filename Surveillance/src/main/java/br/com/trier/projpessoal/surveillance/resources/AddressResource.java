@@ -18,7 +18,7 @@ import br.com.trier.projpessoal.surveillance.domain.dto.AddressDTO;
 import br.com.trier.projpessoal.surveillance.services.AddressService;
 
 @RestController
-@RequestMapping("/address")
+@RequestMapping(value = "/address")
 public class AddressResource {
 	@Autowired
 	private AddressService addressService;

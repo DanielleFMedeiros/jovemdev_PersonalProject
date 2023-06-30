@@ -68,13 +68,13 @@ public class ContractResource {
 
     @GetMapping("/dateInitial/{dateInitial}")
     public ResponseEntity<List<ContractDTO>> getContractsByDateInitial(@PathVariable String dateInitial) {
-        List<Contract> contracts = contractService.findByDateInitial(DateUtils.strToZonedDateTime(dateInitial));
+        List<Contract> contracts = contractService.findByDateInitial(DateUtils.strToLocalDate(dateInitial));
         return ResponseEntity.ok(contracts.stream().map(Contract::toDto).toList());
     }
 
     @GetMapping("/dateBetween/{startDate}/{endDate}")
-    public ResponseEntity<List<ContractDTO>> getContractsByDateBetween(@PathVariable String startDate, @PathVariable String endDate) {
-        List<Contract> contracts = contractService.findByDataBetween(DateUtils.strToZonedDateTime(startDate), DateUtils.strToZonedDateTime(endDate));
+    public ResponseEntity<List<ContractDTO>> getContractsByDateBetween(@PathVariable String dateInitial, @PathVariable String dateFinal) {
+        List<Contract> contracts = contractService.findByDateBetween(DateUtils.strToLocalDate(dateInitial), DateUtils.strToLocalDateFinal(dateFinal));
         return ResponseEntity.ok(contracts.stream().map(Contract::toDto).toList());
     }
 }

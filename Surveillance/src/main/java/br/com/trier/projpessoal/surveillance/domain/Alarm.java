@@ -25,8 +25,6 @@ public class Alarm extends Product {
 
 	@Column
 	private Integer id;
-	@Column
-	private String resolution;
 
 	@ManyToOne
 	private Product product;

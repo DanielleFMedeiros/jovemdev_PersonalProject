@@ -5,8 +5,12 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ActiveProfiles;
 
+import br.com.trier.projpessoal.surveillance.services.AddressService;
 import br.com.trier.projpessoal.surveillance.services.ClientService;
+import br.com.trier.projpessoal.surveillance.services.ContractService;
+import br.com.trier.projpessoal.surveillance.services.impl.AddressServiceImpl;
 import br.com.trier.projpessoal.surveillance.services.impl.ClientServiceImpl;
+import br.com.trier.projpessoal.surveillance.services.impl.ContractServiceImpl;
 
 @TestConfiguration
 @SpringBootTest
@@ -18,39 +22,15 @@ public class BaseTests {
 		return new ClientServiceImpl();
 	}
 
-//	@Bean
-//	public PaisService paisService() {
-//		return new PaisServiceImpl();
-//	}
-//	
-//	@Bean
-//	public EquipeService equipeService() {
-//		return new EquipeServiceImpl();
-//	}
-//	
-//	@Bean
-//	public CampeonatoService campeonatoService() {
-//		return new CampeonatoServiceImpl();
-//	}
-//	
-//	@Bean
-//	public PilotoService pilotoService() {
-//		return new PilotoServiceImpl();
-//	}
-//	
-//	@Bean
-//	public PistaService pistaService() {
-//		return new PistaServiceImpl();
-//	}
-//	
-//	@Bean
-//	public CorridaService corridaService() {
-//		return new CorridaServiceImpl();
-//	}
-//	
-//	@Bean
-//	public PilotoCorridaService pilotoCorridaService() {
-//		return new PilotoCorridaServiceImpl();
-//	}
+	@Bean
+	public AddressService addressService() {
+		return new AddressServiceImpl();
+	}
+	
+	@Bean
+	public ContractService contractService() {
+		return new ContractServiceImpl();
+	}
+
 
 }

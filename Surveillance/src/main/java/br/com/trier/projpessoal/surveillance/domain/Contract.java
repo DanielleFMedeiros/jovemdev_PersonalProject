@@ -1,6 +1,6 @@
 package br.com.trier.projpessoal.surveillance.domain;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 
 import br.com.trier.projpessoal.surveillance.domain.dto.ContractDTO;
 import br.com.trier.projpessoal.surveillance.utils.DateUtils;
@@ -30,10 +30,10 @@ public class Contract {
     private Integer id;
 
     @Column
-    private ZonedDateTime dateInitial;
+    private LocalDate dateInitial;
 
     @Column
-    private ZonedDateTime dateFinal;
+    private LocalDate dateFinal;
 
     @Column
     private Double price;
@@ -48,23 +48,24 @@ public class Contract {
 
     public Contract(ContractDTO dto) {
         this(dto.getId(),
-                DateUtils.strToZonedDateTime(dto.getDateInitial()),
-                DateUtils.strToZonedDateTime(dto.getDateFinal()),
+                DateUtils.strToLocalDate(dto.getDateInitial()),
+                DateUtils.strToLocalDate(dto.getDateFinal()),
                 dto.getPrice(),
                 new Client(dto.getId_client(), dto.getName_client(), dto.getCpf_client(), null),
                 new Address(dto.getId_address(), dto.getStreet(), null, null, null));
     }
 
     public ContractDTO toDto() {
-        return new ContractDTO(id, DateUtils.zonedDateTimeToStr(dateInitial), DateUtils.zonedDateTimeToStr(dateFinal), price, client.getId_client(), client.getName(), client.getCpf(), address.getId(), address.getStreet());
+        return new ContractDTO(id, DateUtils.localDateToStr(dateInitial), DateUtils.localDateToStr(dateFinal), price, client.getId_client(), client.getName(), client.getCpf(), address.getId(), address.getStreet());
     }
 
     public Contract(ContractDTO dto, Contract contract) {
         this(dto.getId(),
-                DateUtils.strToZonedDateTime(dto.getDateInitial()),
-                DateUtils.strToZonedDateTime(dto.getDateFinal()),
+                DateUtils.strToLocalDate(dto.getDateInitial()),
+                DateUtils.strToLocalDate(dto.getDateFinal()),
                 dto.getPrice(),
                 contract.getClient(),
                 contract.getAddress());
     }
+
 }

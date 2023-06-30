@@ -1,6 +1,6 @@
 package br.com.trier.projpessoal.surveillance.services;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +23,11 @@ public interface ContractService {
 
     Optional<Contract> findByCpf(String cpf);
 
-    List<Contract> findByDateInitial(ZonedDateTime dateInitial);
-
-    List<Contract> findByDateFinal(ZonedDateTime dateFinal);
-
-    List<Contract> findByDataBetween(ZonedDateTime dateInitial, ZonedDateTime dateFinal);
-
     List<Contract> findByPrice(Double price);
+    
+    List<Contract> findByDateInitial(LocalDate DateInitial);
 
+    List<Contract> findByDateFinal(LocalDate dateFinal);
+
+    List<Contract> findByDateBetween(LocalDate dateInitial, LocalDate dateFinal);
 }

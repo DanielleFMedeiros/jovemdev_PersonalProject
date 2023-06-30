@@ -1,6 +1,6 @@
 package br.com.trier.projpessoal.surveillance.repositories;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,11 +10,11 @@ import br.com.trier.projpessoal.surveillance.domain.Contract;
 
 public interface ContractRepository extends JpaRepository<Contract, Integer> {
 
-    List<Contract> findByDateInitial(ZonedDateTime dateInitial);
+    List<Contract> findByDateInitial(LocalDate dateInitial);
 
-    List<Contract> findByDateFinal(ZonedDateTime dateFinal);
+    List<Contract> findByDateFinal(LocalDate dateFinal);
 
-	List<Contract> findByDataBetween(ZonedDateTime dataInicial, ZonedDateTime dataFinal);
+	List<Contract> findByDataBetween(LocalDate dateInicial, LocalDate dateFinal);
 
     List<Contract> findByPrice(Double price);
     
