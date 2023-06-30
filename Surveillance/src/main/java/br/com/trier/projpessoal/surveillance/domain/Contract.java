@@ -24,48 +24,48 @@ import lombok.Setter;
 @EqualsAndHashCode(of = "id")
 @Entity(name = "contract")
 public class Contract {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Integer id;
 
-    @Column
-    private LocalDate dateInitial;
+	@Column(name = "date_initial")
+	private LocalDate startDate;
 
-    @Column
-    private LocalDate dateFinal;
+	@Column(name = "date_final")
+	private LocalDate endDate;
 
-    @Column
-    private Double price;
+	@Column(name = "price")
+	private Double price;
 
-    @ManyToOne
-    @JoinColumn(name = "id_client")
-    private Client client;
-    
-    @ManyToOne
-    @JoinColumn(name = "id_address")
-    private Address address;
+	@ManyToOne
+	@JoinColumn(name = "id_client")
+	private Client client;
+
+	@ManyToOne
+	@JoinColumn(name = "id_address")
+	private Address address;
+
 
     public Contract(ContractDTO dto) {
-        this(dto.getId(),
-                DateUtils.strToLocalDate(dto.getDateInitial()),
-                DateUtils.strToLocalDate(dto.getDateFinal()),
-                dto.getPrice(),
-                new Client(dto.getId_client(), dto.getName_client(), dto.getCpf_client(), null),
-                new Address(dto.getId_address(), dto.getStreet(), null, null, null));
+        this(dto.getId(), DateUtils.strToLocalDate(dto.getDate_initial()),
+                DateUtils.strToLocalDate(dto.getDate_final()), dto.getPrice(),
+                new Client(dto.getId_client(),null, dto.getCpf_client(), null),
+                new Address(dto.getId_address(),null, null, null, null));
     }
 
     public ContractDTO toDto() {
-        return new ContractDTO(id, DateUtils.localDateToStr(dateInitial), DateUtils.localDateToStr(dateFinal), price, client.getId_client(), client.getName(), client.getCpf(), address.getId(), address.getStreet());
+        return new ContractDTO(id, DateUtils.localDateToStr(startDate),
+                DateUtils.localDateToStr(endDate), price, client.getId_client(), client.getName(),
+                client.getCpf(), address.getId(), address.getStreet());
     }
 
-    public Contract(ContractDTO dto, Contract contract) {
-        this(dto.getId(),
-                DateUtils.strToLocalDate(dto.getDateInitial()),
-                DateUtils.strToLocalDate(dto.getDateFinal()),
-                dto.getPrice(),
-                contract.getClient(),
-                contract.getAddress());
+    public Contract(int id, LocalDate startDate, LocalDate endDate, double price, int clientId, int addressId) {
+        this.id = id;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.price = price;
+        this.client = new Client(clientId, null, null, null);
+        this.address = new Address(addressId, null, null, null, null);
     }
-
 }

@@ -47,12 +47,14 @@ public class ContractResource {
     public ResponseEntity<ContractDTO> updateContract(@PathVariable Integer id, @RequestBody ContractDTO contractDTO) {
         Contract existingContract = contractService.findById(id);
 
-        Contract contract = new Contract(contractDTO, existingContract);
-        contract.setId(id);
+        existingContract.setPrice(contractDTO.getPrice());
 
-        Contract updatedContract = contractService.update(contract);
+        // Atualizar outros atributos do contrato, se necessário
+
+        Contract updatedContract = contractService.update(existingContract);
         return ResponseEntity.ok(updatedContract.toDto());
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteContract(@PathVariable Integer id) {
@@ -67,14 +69,10 @@ public class ContractResource {
     }
 
     @GetMapping("/dateInitial/{dateInitial}")
-    public ResponseEntity<List<ContractDTO>> getContractsByDateInitial(@PathVariable String dateInitial) {
-        List<Contract> contracts = contractService.findByDateInitial(DateUtils.strToLocalDate(dateInitial));
+    public ResponseEntity<List<ContractDTO>> getContractsByDateInitial(@PathVariable String startDate) {
+        List<Contract> contracts = contractService.findByStartDate(DateUtils.strToLocalDate(startDate));
         return ResponseEntity.ok(contracts.stream().map(Contract::toDto).toList());
     }
 
-    @GetMapping("/dateBetween/{startDate}/{endDate}")
-    public ResponseEntity<List<ContractDTO>> getContractsByDateBetween(@PathVariable String dateInitial, @PathVariable String dateFinal) {
-        List<Contract> contracts = contractService.findByDateBetween(DateUtils.strToLocalDate(dateInitial), DateUtils.strToLocalDateFinal(dateFinal));
-        return ResponseEntity.ok(contracts.stream().map(Contract::toDto).toList());
-    }
+
 }

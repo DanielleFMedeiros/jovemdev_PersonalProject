@@ -10,13 +10,12 @@ import br.com.trier.projpessoal.surveillance.domain.Contract;
 
 public interface ContractRepository extends JpaRepository<Contract, Integer> {
 
-    List<Contract> findByDateInitial(LocalDate dateInitial);
+    List<Contract> findByStartDate (LocalDate startDate);
 
-    List<Contract> findByDateFinal(LocalDate dateFinal);
-
-	List<Contract> findByDataBetween(LocalDate dateInicial, LocalDate dateFinal);
+    List<Contract> findByEndDate(LocalDate endDate);
 
     List<Contract> findByPrice(Double price);
     
     Optional<Contract> findByClient_Cpf(String cpf);
+
 }

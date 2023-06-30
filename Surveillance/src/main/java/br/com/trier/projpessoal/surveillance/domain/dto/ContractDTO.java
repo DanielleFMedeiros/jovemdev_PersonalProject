@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ContractDTO {
 	private Integer id;
-	private String dateInitial;
-	private String dateFinal;
+	private String date_initial;
+	private String date_final;
 	private Double price;
 	private Integer id_client;
 	private String name_client;

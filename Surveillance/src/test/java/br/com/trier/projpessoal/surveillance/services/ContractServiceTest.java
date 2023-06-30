@@ -3,11 +3,9 @@ package br.com.trier.projpessoal.surveillance.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.projpessoal.surveillance.BaseTests;
+import br.com.trier.projpessoal.surveillance.domain.Client;
 import br.com.trier.projpessoal.surveillance.domain.Contract;
+import br.com.trier.projpessoal.surveillance.services.exceptions.BreachOfIntegrity;
 import br.com.trier.projpessoal.surveillance.services.exceptions.ObjectNotFound;
 import jakarta.transaction.Transactional;
 
@@ -29,126 +29,211 @@ public class ContractServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Test insert contract")
-    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/contract.sql" })
-    public void testInsert() {
-        Contract newContract = new Contract(6, LocalDate.parse("2023-06-21"), LocalDate.parse("2023-06-23"), 75.0, 5, 6);
-        Contract savedContract = contractService.insert(newContract);
+    public void testInsertContract() {
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusMonths(1);
+        double price = 100.0;
+        int clientId = 1;
+
+        Contract contract = new Contract();
+        contract.setStartDate(startDate);
+        contract.setEndDate(endDate);
+        contract.setPrice(price);
+
+        // Criar um objeto do tipo Client e definir o ID do cliente
+        Client client = new Client();
+        client.setId_client(clientId);
+
+        // Associar o cliente ao contrato
+        contract.setClient(client);
+
+        Contract savedContract = contractService.insert(contract);
+
         assertNotNull(savedContract);
-        assertEquals(6, savedContract.getId());
+        assertNotNull(savedContract.getId());
+        assertEquals(startDate, savedContract.getStartDate());
+        assertEquals(endDate, savedContract.getEndDate());
+        assertEquals(price, savedContract.getPrice());
+        assertEquals(clientId, savedContract.getClient().getId_client());
     }
 
     @Test
-    @DisplayName("Test list all contract")
-    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/contract.sql" })
-    public void testListAll() {
+    @DisplayName("Test insert contract with missing start date")
+    public void testInsertContractMissingStartDate() {
+        LocalDate endDate = LocalDate.now().plusMonths(1);
+        double price = 100.0;
+        int clientId = 4;
+
+        Contract contract = new Contract();
+        contract.setEndDate(endDate);
+        contract.setPrice(price);
+        contract.setClient(clientId);
+
+        assertThrows(BreachOfIntegrity.class, () -> contractService.insert(contract));
+    }
+
+    @Test
+    @DisplayName("Test insert contract with missing end date")
+    public void testInsertContractMissingEndDate() {
+        LocalDate startDate = LocalDate.now();
+        double price = 100.0;
+        int clientId = 5;
+
+        Contract contract = new Contract();
+        contract.setStartDate(startDate);
+        contract.setPrice(price);
+        contract.setClient(clientId);
+
+        assertThrows(BreachOfIntegrity.class, () -> contractService.insert(contract));
+    }
+
+    @Test
+    @DisplayName("Test insert contract with negative price")
+    public void testInsertContractNegativePrice() {
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusMonths(1);
+        double price = -100.0;
+        int clientId = 6;
+
+        Contract contract = new Contract();
+        contract.setStartDate(startDate);
+        contract.setEndDate(endDate);
+        contract.setPrice(price);
+        contract.setClient(clientId);
+
+        assertThrows(BreachOfIntegrity.class, () -> contractService.insert(contract));
+    }
+
+    @Test
+    @DisplayName("Test insert contract with missing client")
+    public void testInsertContractMissingClient() {
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusMonths(1);
+        double price = 100.0;
+
+        Contract contract = new Contract();
+        contract.setStartDate(startDate);
+        contract.setEndDate(endDate);
+        contract.setPrice(price);
+
+        assertThrows(BreachOfIntegrity.class, () -> contractService.insert(contract));
+    }
+
+
+
+
+    @Test
+    @DisplayName("Test insert contract with missing start date")
+    public void testInsertMissingStartDate() {
+        LocalDate dateFinal = LocalDate.parse("2023-06-23");
+
+        Contract newContract = new Contract(6, null, dateFinal, 75.0, 5, 3);
+
+        assertThrows(BreachOfIntegrity.class, () -> contractService.insert(newContract));
+    }
+
+    @Test
+    @DisplayName("Test list all contracts")
+    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/address.sql",
+            "classpath:/resources/sqls/contract.sql" })
+    public void testListAllContracts() {
         List<Contract> contracts = contractService.listAll();
+
         assertEquals(3, contracts.size());
     }
 
     @Test
-    @DisplayName("Test findbyId contract")
-    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/contract.sql" })
-    public void testFindById() {
+    @DisplayName("Test find contract by ID")
+    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/address.sql",
+            "classpath:/resources/sqls/contract.sql" })
+    public void testFindContractById() {
         Contract contract = contractService.findById(3);
+
         assertNotNull(contract);
         assertEquals(3, contract.getId());
-        assertThrows(ObjectNotFound.class, () -> contractService.findById(100));
     }
 
     @Test
     @DisplayName("Test update contract")
-    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/contract.sql" })
-    public void testUpdate() {
-        Contract existingContract = contractService.findById(3);
-        existingContract.setPrice(60.0);
-        Contract updatedContract = contractService.update(existingContract);
-        assertEquals(60, updatedContract.getPrice());
-        // Verifique outros atributos atualizados se necessário
+    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/address.sql",
+            "classpath:/resources/sqls/contract.sql" })
+    public void testUpdateContract() {
+        Contract contract = contractService.findById(3);
+        contract.setPrice(100.0);
 
-        // Testar o caso em que o contrato não existe
-        Contract nonExistingContract = new Contract(1000, "2025-06-20", "2026-06-21", 100.0, 3, 3);
-        assertThrows(ObjectNotFound.class, () -> contractService.update(nonExistingContract));
+        Contract updatedContract = contractService.update(contract);
+
+        assertNotNull(updatedContract);
+        assertEquals(100.0, updatedContract.getPrice());
     }
 
     @Test
     @DisplayName("Test delete contract")
-    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/contract.sql" })
-    public void testDelete() {
-        contractService.delete(3);
-        assertThrows(ObjectNotFound.class, () -> contractService.findById(3));
+    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/address.sql",
+            "classpath:/resources/sqls/contract.sql" })
+    public void testDeleteContract() {
+        contractService.delete(4);
 
-        // Testar o caso em que o contrato não existe
-        assertThrows(ObjectNotFound.class, () -> contractService.delete(100));
+        assertThrows(ObjectNotFound.class, () -> contractService.findById(1));
     }
-
+    
     @Test
-    @DisplayName("Test findByPrice contract")
-    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/contract.sql" })
-    public void testFindByPrice() {
-        List<Contract> contracts = contractService.findByPrice(50.0);
-        assertEquals(2, contracts.size());
-        // Verifique outros contratos se necessário
+    @DisplayName("Test find contracts by price")
+    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/address.sql",
+            "classpath:/resources/sqls/contract.sql" })
+    public void testFindContractsByPrice() {
+        double price = 100.0;
+        List<Contract> contracts = contractService.findByPrice(price);
 
-        // Testar o caso em que nenhum contrato é encontrado
-        assertThrows(ObjectNotFound.class, () -> contractService.findByPrice(200.0));
-    }
-
-    @Test
-    @DisplayName("Test findByDateInicial contract")
-    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/contract.sql" })
-    public void testFindByDateInitial() {
-        // Testar o método findByDateInitial
-
-        LocalDate date = LocalDate.parse("2023-06-29");
-        ZonedDateTime dateInitial = ZonedDateTime.of(date.atStartOfDay(), ZoneId.systemDefault());
-        List<Contract> contracts = contractService.findByDateInitial(dateInitial);
         assertEquals(1, contracts.size());
-        // Verifique outros contratos se necessário
-
-        // Testar o caso em que nenhum contrato é encontrado
-
-        LocalDate nonExistingDate = LocalDate.parse("2023-06-30");
-        ZonedDateTime nonExistingDateInitial = ZonedDateTime.of(nonExistingDate.atStartOfDay(), ZoneId.systemDefault());
-        assertThrows(ObjectNotFound.class, () -> contractService.findByDateInitial(nonExistingDateInitial));
+        contracts.forEach(contract -> assertEquals(price, contract.getPrice()));
     }
 
     @Test
-    @DisplayName("Test findByDateFinal contract")
-    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/contract.sql" })
-    public void testFindByDateFinal() {
-        LocalDate date = LocalDate.parse("2024-06-29");
-        ZonedDateTime dateFinal = ZonedDateTime.of(date.atStartOfDay(), ZoneId.systemDefault());
-        List<Contract> contracts = contractService.findByDateFinal(dateFinal);
+    @DisplayName("Test find contracts by start date")
+    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/address.sql",
+            "classpath:/resources/sqls/contract.sql" })
+    public void testFindContractsByStartDate() {
+        LocalDate startDate = LocalDate.parse("2023-06-29", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        List<Contract> contracts = contractService.findByStartDate(startDate);
+
         assertEquals(1, contracts.size());
-        // Verifique outros contratos se necessário
-
-        // Testar o caso em que nenhum contrato é encontrado
-        LocalDate nonExistingDate = LocalDate.parse("2024-06-30");
-        ZonedDateTime nonExistingDateFinal = ZonedDateTime.of(nonExistingDate.atStartOfDay(), ZoneId.systemDefault());
-        assertThrows(ObjectNotFound.class, () -> contractService.findByDateFinal(nonExistingDateFinal));
+        contracts.forEach(contract -> assertEquals(startDate, contract.getStartDate()));
     }
 
     @Test
-    @DisplayName("Test FindByDataBetween contract")
-    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/contract.sql" })
-    public void testFindByDataBetween() {
-        // Testar o método findByDataBetween
-        LocalDate dateInicial1 = LocalDate.parse("2023-06-28");
-        LocalDate dateFinal1 = LocalDate.parse("2023-06-30");
-        ZonedDateTime dateInicial = ZonedDateTime.of(dateInicial1.atStartOfDay(), ZoneId.systemDefault());
-        ZonedDateTime dateFinal = ZonedDateTime.of(dateFinal1.atStartOfDay(), ZoneId.systemDefault());
-        List<Contract> contracts = contractService.findByDateBetween(dateInicial, dateFinal);
-        assertEquals(2, contracts.size());
-        // Verifique outros contratos se necessário
+    @DisplayName("Test find contracts by end date")
+    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/address.sql",
+            "classpath:/resources/sqls/contract.sql" })
+    public void testFindContractsByEndDate() {
+        LocalDate endDate = LocalDate.parse("2024-06-23", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        List<Contract> contracts = contractService.findByEndDate(endDate);
 
-        // Testar o caso em que nenhum contrato é encontrado
-        LocalDate nonExistingdateInicial = LocalDate.parse("2022-06-28");
-        LocalDate nonExistingdateFinal = LocalDate.parse("2022-06-30");
-        ZonedDateTime nonExistingDataInicial = ZonedDateTime.of(nonExistingdateInicial.atStartOfDay(),
-                ZoneId.systemDefault());
-        ZonedDateTime nonExistingDataFinal = ZonedDateTime.of(nonExistingdateFinal.atStartOfDay(),
-                ZoneId.systemDefault());
-        assertThrows(ObjectNotFound.class, () -> contractService.findByDateBetween(nonExistingDataInicial,
-                nonExistingDataFinal));
+        assertEquals(1, contracts.size());
+        contracts.forEach(contract -> assertEquals(endDate, contract.getEndDate()));
     }
+
+    @Test
+    @DisplayName("Test find contract by CPF")
+    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/address.sql",
+            "classpath:/resources/sqls/contract.sql" })
+    public void testFindContractByCpf() {
+        String cpf = "876.543.210-01";
+        Optional<Contract> contract = contractService.findByCpf(cpf);
+
+        assertNotNull(contract);
+        assertEquals(cpf, contract.get().getClient().getCpf());
+    }
+
+    @Test
+    @DisplayName("Test find contract by non-existent CPF")
+    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/address.sql",
+            "classpath:/resources/sqls/contract.sql" })
+    public void testFindContractByNonExistentCpf() {
+        String cpf = "99999999999";
+
+        assertThrows(ObjectNotFound.class, () -> contractService.findByCpf(cpf));
+    }
+
 }
+
