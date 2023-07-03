@@ -30,31 +30,33 @@ public class ContractServiceTest extends BaseTests {
     @Test
     @DisplayName("Test insert contract")
     public void testInsertContract() {
-        LocalDate startDate = LocalDate.now();
-        LocalDate endDate = startDate.plusMonths(1);
+        LocalDate startDate = LocalDate.of(2023, 06, 21);
+        LocalDate endDate = LocalDate.of(2025, 06, 21);
         double price = 100.0;
-        int clientId = 1;
+        int id_client = 5;
+        int id_adress = 3;
 
         Contract contract = new Contract();
         contract.setStartDate(startDate);
         contract.setEndDate(endDate);
         contract.setPrice(price);
+        contract.setAddress(id_adress);
 
         // Criar um objeto do tipo Client e definir o ID do cliente
         Client client = new Client();
-        client.setId_client(clientId);
+        client.setId_client(id_client);
 
         // Associar o cliente ao contrato
         contract.setClient(client);
 
-        Contract savedContract = contractService.insert(contract);
+        Contract save = contractService.insert(contract);
 
-        assertNotNull(savedContract);
-        assertNotNull(savedContract.getId());
-        assertEquals(startDate, savedContract.getStartDate());
-        assertEquals(endDate, savedContract.getEndDate());
-        assertEquals(price, savedContract.getPrice());
-        assertEquals(clientId, savedContract.getClient().getId_client());
+        assertNotNull(save);
+        assertNotNull(save.getId());
+        assertEquals(startDate, save.getStartDate());
+        assertEquals(endDate, save.getEndDate());
+        assertEquals(price, save.getPrice());
+        assertEquals(id_client, save.getClient().getId_client());
     }
 
     @Test
@@ -63,11 +65,13 @@ public class ContractServiceTest extends BaseTests {
         LocalDate endDate = LocalDate.now().plusMonths(1);
         double price = 100.0;
         int clientId = 4;
+        Client client = new Client();
+        client.setId_client(clientId);
 
         Contract contract = new Contract();
         contract.setEndDate(endDate);
         contract.setPrice(price);
-        contract.setClient(clientId);
+        contract.setClient(client);
 
         assertThrows(BreachOfIntegrity.class, () -> contractService.insert(contract));
     }
@@ -78,11 +82,12 @@ public class ContractServiceTest extends BaseTests {
         LocalDate startDate = LocalDate.now();
         double price = 100.0;
         int clientId = 5;
-
+        Client client = new Client();
+        client.setId_client(clientId);
         Contract contract = new Contract();
         contract.setStartDate(startDate);
         contract.setPrice(price);
-        contract.setClient(clientId);
+        contract.setClient(client);
 
         assertThrows(BreachOfIntegrity.class, () -> contractService.insert(contract));
     }
@@ -94,12 +99,13 @@ public class ContractServiceTest extends BaseTests {
         LocalDate endDate = startDate.plusMonths(1);
         double price = -100.0;
         int clientId = 6;
-
+        Client client = new Client();
+        client.setId_client(clientId);
         Contract contract = new Contract();
         contract.setStartDate(startDate);
         contract.setEndDate(endDate);
         contract.setPrice(price);
-        contract.setClient(clientId);
+        contract.setClient(client);
 
         assertThrows(BreachOfIntegrity.class, () -> contractService.insert(contract));
     }
