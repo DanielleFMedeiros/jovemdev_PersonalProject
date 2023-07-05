@@ -13,43 +13,43 @@ import br.com.trier.projpessoal.surveillance.services.exceptions.ObjectNotFound;
 @Service
 public class AlarmServiceImpl implements AlarmService {
 
-    private final AlarmRepository alarmRepository;
+    private final AlarmRepository repository;
 
     @Autowired
-    public AlarmServiceImpl(AlarmRepository alarmRepository) {
-        this.alarmRepository = alarmRepository;
+    public AlarmServiceImpl(AlarmRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public Alarm insert(Alarm alarm) {
-        return alarmRepository.save(alarm);
+        return repository.save(alarm);
     }
 
     @Override
     public List<Alarm> listAll() {
-        return alarmRepository.findAll();
+        return repository.findAll();
     }
 
     @Override
     public Alarm findById(Integer id) {
-        return alarmRepository.findById(id)
+        return repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFound("Alarme não encontrado com o ID: " + id));
     }
 
     @Override
     public Alarm update(Alarm alarm) {
-        if (!alarmRepository.existsById(alarm.getId())) {
+        if (!repository.existsById(alarm.getId())) {
             throw new ObjectNotFound("Alarm não encontrado com o ID: " + alarm.getId());
         }
-        return alarmRepository.save(alarm);
+        return repository.save(alarm);
     }
 
     @Override
     public void delete(Integer id) {
-        if (!alarmRepository.existsById(id)) {
+        if (!repository.existsById(id)) {
             throw new ObjectNotFound("Alarm não encontrado com o ID: " + id);
         }
-        alarmRepository.deleteById(id);
+        repository.deleteById(id);
     }
 
 
