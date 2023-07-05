@@ -1,15 +1,11 @@
 package br.com.trier.projpessoal.surveillance.services;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
-
 import br.com.trier.projpessoal.surveillance.domain.Contract;
 
-@Service
 public interface ContractService {
 
     Contract insert(Contract contract);

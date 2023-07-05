@@ -33,7 +33,7 @@ public class ContractServiceTest extends BaseTests {
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusMonths(1);
         double price = 100.0;
-        int clientId = 1;
+        int clientId = 12;
 
         Contract contract = new Contract();
         contract.setStartDate(startDate);
@@ -67,7 +67,7 @@ public class ContractServiceTest extends BaseTests {
         Contract contract = new Contract();
         contract.setEndDate(endDate);
         contract.setPrice(price);
-        contract.setClient(clientId);
+        contract.getClient().setId_client(clientId);
 
         assertThrows(BreachOfIntegrity.class, () -> contractService.insert(contract));
     }
@@ -82,7 +82,7 @@ public class ContractServiceTest extends BaseTests {
         Contract contract = new Contract();
         contract.setStartDate(startDate);
         contract.setPrice(price);
-        contract.setClient(clientId);
+        contract.getClient().setId_client(clientId);
 
         assertThrows(BreachOfIntegrity.class, () -> contractService.insert(contract));
     }
@@ -99,7 +99,7 @@ public class ContractServiceTest extends BaseTests {
         contract.setStartDate(startDate);
         contract.setEndDate(endDate);
         contract.setPrice(price);
-        contract.setClient(clientId);
+        contract.getClient().setId_client(clientId);
 
         assertThrows(BreachOfIntegrity.class, () -> contractService.insert(contract));
     }

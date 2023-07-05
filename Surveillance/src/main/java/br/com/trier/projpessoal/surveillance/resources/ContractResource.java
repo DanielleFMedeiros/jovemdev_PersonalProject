@@ -49,8 +49,6 @@ public class ContractResource {
 
         existingContract.setPrice(contractDTO.getPrice());
 
-        // Atualizar outros atributos do contrato, se necessário
-
         Contract updatedContract = contractService.update(existingContract);
         return ResponseEntity.ok(updatedContract.toDto());
     }

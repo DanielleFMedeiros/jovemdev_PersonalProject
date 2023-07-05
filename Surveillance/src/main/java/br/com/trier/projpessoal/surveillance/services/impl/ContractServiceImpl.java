@@ -18,7 +18,7 @@ import br.com.trier.projpessoal.surveillance.services.exceptions.ObjectNotFound;
 public class ContractServiceImpl implements ContractService {
 
     @Autowired
-    private ContractRepository contractRepository;
+    private ContractRepository repository;
 
     @Override
     public Contract insert(Contract contract) {
@@ -35,42 +35,42 @@ public class ContractServiceImpl implements ContractService {
             throw new BreachOfIntegrity("O cliente é obrigatório");
         }
 
-        return contractRepository.save(contract);
+        return repository.save(contract);
     }
 
     @Override
     public List<Contract> listAll() {
-        List<Contract> list = contractRepository.findAll();
+        List<Contract> list = repository.findAll();
         if (list.size() == 0) {
             throw new ObjectNotFound("Nenhum contrato encontrado");
         }
-        return contractRepository.findAll();
+        return repository.findAll();
     }
 
     @Override
     public Contract findById(Integer id) {
-        Optional<Contract> obj = contractRepository.findById(id);
+        Optional<Contract> obj = repository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFound("Contrato com ID %s não encontrado".formatted(id)));
     }
 
     @Override
     public Contract update(Contract contract) {
-        Optional<Contract> existingContract = contractRepository.findById(contract.getId());
+        Optional<Contract> existingContract = repository.findById(contract.getId());
         if (existingContract.isEmpty()) {
             throw new ObjectNotFound("Endereço com ID %s não encontrado".formatted(contract.getId()));
         }
-        return contractRepository.save(contract);
+        return repository.save(contract);
     }
 
     @Override
     public void delete(Integer id) {
         Contract contract = findById(id);
-        contractRepository.delete(contract);
+        repository.delete(contract);
     }
 
     @Override
     public List<Contract> findByPrice(Double price) {
-        List<Contract> contract = contractRepository.findByPrice(price);
+        List<Contract> contract = repository.findByPrice(price);
 
         if (contract.isEmpty()) {
             throw new ObjectNotFound("Nenhum contrato encontrado com esse preço: " + price);
@@ -82,25 +82,25 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public List<Contract> findByStartDate(LocalDate dateInitial) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        if (contractRepository.findByStartDate(dateInitial).size() == 0) {
+        if (repository.findByStartDate(dateInitial).size() == 0) {
             throw new ObjectNotFound("Não há contratos na data: " + formatter.format(dateInitial));
         }
-        return contractRepository.findByStartDate(dateInitial);
+        return repository.findByStartDate(dateInitial);
     }
 
 
     @Override
     public List<Contract> findByEndDate (LocalDate endDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        if (contractRepository.findByEndDate(endDate).size() == 0) {
+        if (repository.findByEndDate(endDate).size() == 0) {
             throw new ObjectNotFound("Não há contratos na data: " + formatter.format(endDate));
         }
-        return contractRepository.findByEndDate(endDate);
+        return repository.findByEndDate(endDate);
     }
 
     @Override
     public Optional<Contract> findByCpf(String cpf) {
-        Optional<Contract> client = contractRepository.findByClient_Cpf(cpf);
+        Optional<Contract> client = repository.findByClient_Cpf(cpf);
         if (client.isEmpty()) {
             throw new ObjectNotFound("Cliente com CPF %s não encontrado".formatted(cpf));
         }
