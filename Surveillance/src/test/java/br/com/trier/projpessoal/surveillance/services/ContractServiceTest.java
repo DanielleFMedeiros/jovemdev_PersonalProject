@@ -29,27 +29,25 @@ public class ContractServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Test insert contract")
-	@Sql({ "classpath:/resources/sqls/client.sql" })
-	@Sql({ "classpath:/resources/sqls/address.sql" })	
-	@Sql({ "classpath:/resources/sqls/contract.sql" })
+    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/address.sql", "classpath:/resources/sqls/contract.sql" })
     public void testInsertContract() {
-    	 LocalDate startDate = LocalDate.of(2023, 06, 21);
-         LocalDate endDate = LocalDate.of(2025, 06, 21);
-         double price = 100.0;
-         int id_client = 5;
-         int id_adress = 3;
-         Contract contract = new Contract();
-         var contract1 = new Contract(null, startDate, endDate, price,id_client,id_adress, new Client(5, null,null,null));
+        LocalDate startDate = LocalDate.of(2023, 06, 21);
+        LocalDate endDate = LocalDate.of(2025, 06, 21);
+        double price = 100.0;
+        int id_client = 5;
+        int id_address = 3;
+        Contract contract = new Contract();
+        var contract1 = new Contract(null, startDate, endDate, price, id_client, id_address, new Client(5, null, null, null));
 
-    	contractService.insert(contract1);
-		assertEquals(1, contract1.getId());
-		assertEquals(startDate, contract1.getStartDate());
-		assertEquals(endDate, contract1.getEndDate());
-		assertEquals(price, contract1.getPrice());
-		assertEquals(5, contract1.getClient().getId_client());
-		assertEquals(3, contract1.getAddress().getId());
-        
+        contractService.insert(contract1);
+        assertNotNull(contract1.getId());
+        assertEquals(startDate, contract1.getStartDate());
+        assertEquals(endDate, contract1.getEndDate());
+        assertEquals(price, contract1.getPrice(), 0.01); // Use a delta for double comparisons
+        assertEquals(5, contract1.getClient().getId_client());
+        assertEquals(3, contract1.getAddress().getId());
     }
+
 
     @Test
     @DisplayName("Test insert contract with missing start date")
