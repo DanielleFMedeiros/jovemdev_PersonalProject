@@ -29,33 +29,25 @@ public class ContractServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Test insert contract")
+    @Sql({ "classpath:/resources/sqls/client.sql", "classpath:/resources/sqls/address.sql", "classpath:/resources/sqls/contract.sql" })
     public void testInsertContract() {
-        LocalDate startDate = LocalDate.now();
-        LocalDate endDate = startDate.plusMonths(1);
+        LocalDate startDate = LocalDate.of(2023, 06, 21);
+        LocalDate endDate = LocalDate.of(2025, 06, 21);
         double price = 100.0;
         int clientId = 12;
 
         Contract contract = new Contract();
-        contract.setStartDate(startDate);
-        contract.setEndDate(endDate);
-        contract.setPrice(price);
+        var contract1 = new Contract(null, startDate, endDate, price, clientId, clientId, new Client(5, null, null, null));
 
-        // Criar um objeto do tipo Client e definir o ID do cliente
-        Client client = new Client();
-        client.setId_client(clientId);
-
-        // Associar o cliente ao contrato
-        contract.setClient(client);
-
-        Contract savedContract = contractService.insert(contract);
-
-        assertNotNull(savedContract);
-        assertNotNull(savedContract.getId());
-        assertEquals(startDate, savedContract.getStartDate());
-        assertEquals(endDate, savedContract.getEndDate());
-        assertEquals(price, savedContract.getPrice());
-        assertEquals(clientId, savedContract.getClient().getId_client());
+        contractService.insert(contract1);
+        assertNotNull(contract1.getId());
+        assertEquals(startDate, contract1.getStartDate());
+        assertEquals(endDate, contract1.getEndDate());
+        assertEquals(price, contract1.getPrice(), 0.01); // Use a delta for double comparisons
+        assertEquals(5, contract1.getClient().getId_client());
+        assertEquals(3, contract1.getAddress().getId());
     }
+
 
     @Test
     @DisplayName("Test insert contract with missing start date")
@@ -63,11 +55,15 @@ public class ContractServiceTest extends BaseTests {
         LocalDate endDate = LocalDate.now().plusMonths(1);
         double price = 100.0;
         int clientId = 4;
+        Client client = new Client();
+        client.setId_client(clientId);
 
         Contract contract = new Contract();
         contract.setEndDate(endDate);
         contract.setPrice(price);
+
         contract.getClient().setId_client(clientId);
+
 
         assertThrows(BreachOfIntegrity.class, () -> contractService.insert(contract));
     }
@@ -78,11 +74,14 @@ public class ContractServiceTest extends BaseTests {
         LocalDate startDate = LocalDate.now();
         double price = 100.0;
         int clientId = 5;
-
+        Client client = new Client();
+        client.setId_client(clientId);
         Contract contract = new Contract();
         contract.setStartDate(startDate);
         contract.setPrice(price);
+
         contract.getClient().setId_client(clientId);
+
 
         assertThrows(BreachOfIntegrity.class, () -> contractService.insert(contract));
     }
@@ -94,11 +93,13 @@ public class ContractServiceTest extends BaseTests {
         LocalDate endDate = startDate.plusMonths(1);
         double price = -100.0;
         int clientId = 6;
-
+        Client client = new Client();
+        client.setId_client(clientId);
         Contract contract = new Contract();
         contract.setStartDate(startDate);
         contract.setEndDate(endDate);
         contract.setPrice(price);
+
         contract.getClient().setId_client(clientId);
 
         assertThrows(BreachOfIntegrity.class, () -> contractService.insert(contract));

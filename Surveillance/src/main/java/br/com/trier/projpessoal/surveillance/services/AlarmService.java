@@ -18,5 +18,4 @@ public interface AlarmService {
 
 	String getProductName(Integer alarmId);
 
-
 }
