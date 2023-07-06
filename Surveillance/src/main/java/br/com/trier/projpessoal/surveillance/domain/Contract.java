@@ -68,4 +68,6 @@ public class Contract {
         this.client = new Client(clientId, null, null, null);
         this.address = new Address(addressId, null, null, null, null);
     }
+
+
 }

@@ -8,9 +8,11 @@ import org.springframework.test.context.ActiveProfiles;
 import br.com.trier.projpessoal.surveillance.services.AddressService;
 import br.com.trier.projpessoal.surveillance.services.ClientService;
 import br.com.trier.projpessoal.surveillance.services.ContractService;
+import br.com.trier.projpessoal.surveillance.services.EmailService;
 import br.com.trier.projpessoal.surveillance.services.impl.AddressServiceImpl;
 import br.com.trier.projpessoal.surveillance.services.impl.ClientServiceImpl;
 import br.com.trier.projpessoal.surveillance.services.impl.ContractServiceImpl;
+import br.com.trier.projpessoal.surveillance.services.impl.EmailServiceImpl;
 
 @TestConfiguration
 @SpringBootTest
@@ -30,6 +32,11 @@ public class BaseTests {
 	@Bean
 	public ContractService contractService() {
 		return new ContractServiceImpl();
+	}
+	
+	@Bean
+	public EmailService emailService() {
+		return new EmailServiceImpl();
 	}
 
 

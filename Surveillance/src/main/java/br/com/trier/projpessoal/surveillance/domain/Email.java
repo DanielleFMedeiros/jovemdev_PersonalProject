@@ -1,9 +1,11 @@
 package br.com.trier.projpessoal.surveillance.domain;
+import br.com.trier.projpessoal.surveillance.domain.dto.EmailDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -27,5 +29,16 @@ public class Email {
 	private String email;
 	
 	@ManyToOne
-	private Client client;
+    @JoinColumn(name = "id_client")
+    private Client client;
+
+    public Email(EmailDTO dto) {
+        this.id = dto.getId();
+        this.email = dto.getEmail();
+        this.client = new Client(dto.getId_client(), null, null, null);
+    }
+
+    public EmailDTO toDto() {
+        return new EmailDTO(this.id, this.email, client.getId_client());
+    }
 }

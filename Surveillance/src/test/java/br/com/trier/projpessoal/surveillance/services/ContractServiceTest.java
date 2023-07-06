@@ -29,34 +29,26 @@ public class ContractServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Test insert contract")
+	@Sql({ "classpath:/resources/sqls/client.sql" })
+	@Sql({ "classpath:/resources/sqls/address.sql" })	
+	@Sql({ "classpath:/resources/sqls/contract.sql" })
     public void testInsertContract() {
-        LocalDate startDate = LocalDate.of(2023, 06, 21);
-        LocalDate endDate = LocalDate.of(2025, 06, 21);
-        double price = 100.0;
-        int id_client = 5;
-        int id_adress = 3;
+    	 LocalDate startDate = LocalDate.of(2023, 06, 21);
+         LocalDate endDate = LocalDate.of(2025, 06, 21);
+         double price = 100.0;
+         int id_client = 5;
+         int id_adress = 3;
+         Contract contract = new Contract();
+         var contract1 = new Contract(null, startDate, endDate, price,id_client,id_adress, new Client(5, null,null,null));
 
-        Contract contract = new Contract();
-        contract.setStartDate(startDate);
-        contract.setEndDate(endDate);
-        contract.setPrice(price);
-        contract.setAddress(id_adress);
-
-        // Criar um objeto do tipo Client e definir o ID do cliente
-        Client client = new Client();
-        client.setId_client(id_client);
-
-        // Associar o cliente ao contrato
-        contract.setClient(client);
-
-        Contract save = contractService.insert(contract);
-
-        assertNotNull(save);
-        assertNotNull(save.getId());
-        assertEquals(startDate, save.getStartDate());
-        assertEquals(endDate, save.getEndDate());
-        assertEquals(price, save.getPrice());
-        assertEquals(id_client, save.getClient().getId_client());
+    	contractService.insert(contract1);
+		assertEquals(1, contract1.getId());
+		assertEquals(startDate, contract1.getStartDate());
+		assertEquals(endDate, contract1.getEndDate());
+		assertEquals(price, contract1.getPrice());
+		assertEquals(5, contract1.getClient().getId_client());
+		assertEquals(3, contract1.getAddress().getId());
+        
     }
 
     @Test
