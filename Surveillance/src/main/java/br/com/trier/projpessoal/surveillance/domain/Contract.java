@@ -39,11 +39,11 @@ public class Contract {
 	private Double price;
 
 	@ManyToOne
-	@JoinColumn(name = "id_client")
+	@JoinColumn(name = "client_id")
 	private Client client;
 
 	@ManyToOne
-	@JoinColumn(name = "id_address")
+	@JoinColumn(name = "address_id")
 	private Address address;
 
 
